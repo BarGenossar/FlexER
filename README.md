@@ -7,7 +7,7 @@ Entity resolution (ER), a longstanding problem of data cleaning and integration,
 
 In this work, we use [DITTO](https://github.com/megagonlabs/ditto), the state-of-the-art in universal ER. Specifically, we use the final embedding of the special token [cls](used for classification) as a record pair representation, and inject it into the FlexER system.
 
-![mier_system](/images/mier_system.JPG)
+![mier_system](/images/mier_system_small.JPG)
 
 ## MIER: Multiple Intents Entity Resolution
 We offer to extend the universal view of ER, pointedly reflected in the use of a single mapping from records to real-world entities, to include multiple intents.
