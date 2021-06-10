@@ -35,7 +35,7 @@ The GCN inference is performed using a message passing algorithm following [Kipf
 
 For further details and official definitions, please refer to our paper (currently under review).
 
-![FlexER_small](/images/FlexER_small.jpg)
+![FlexER_small](/images/FlexER_small.JPG)
 
 ## Requirements
 1. The same as mentioned in [DITTO](https://github.com/megagonlabs/ditto)
