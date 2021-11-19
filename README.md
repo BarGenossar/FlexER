@@ -1,5 +1,5 @@
 # FlexER: Flexible Entity Resolution for Multiple Intents
-Implementation of our paper "FlexER: Flexible Entity Resolution for Multiple Intents" (currently under review for [VLDB22](https://vldb.org/2022/)).
+Implementation of our paper "FlexER: Flexible Entity Resolution for Multiple Intents" (currently under review for [VLDB22](https://icde2022.ieeecomputer.my/)).
 
 
 ## Abstract
