@@ -27,7 +27,7 @@ classifier_criterion = nn.CrossEntropyLoss()
 regression_criterion = nn.MSELoss()
 
 
-def mixda(model, batch, inference, MCML_inference, intents_num, ML_head, alpha_aug=0.4):
+def mixda(model, batch, inference, MCML_inference, intents_num, ML_head=None, alpha_aug=0.4):
     """Perform one iteration of MixDA
 
     Args:
@@ -248,7 +248,7 @@ def initialize_and_train(task_config,
                          run_tag, task,
                          inference, MCML_inference,
                          intents_num,
-                         ML_head):
+                         ML_head=None):
     """The train process.
 
     Args:
@@ -312,7 +312,7 @@ def initialize_and_train(task_config,
               inference,
               intents_num,
               seed, MCML_inference,
-              ML_head,
+              ML_head=None,
               scheduler=scheduler,
               fp16=hp.fp16,
               batch_size=hp.batch_size,
@@ -336,6 +336,8 @@ def initialize_and_train(task_config,
             if hp.save_model:
                 if dev_f1 > best_dev_f1:
                     best_dev_f1 = dev_f1
+                    if not os.path.exists(run_tag):
+                        os.makedirs(run_tag)
                     torch.save(model.state_dict(), run_tag + task + '.pt')
                 # if test_f1 > best_test_f1:
                 #     best_test_f1 = test_f1
