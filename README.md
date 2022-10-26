@@ -8,7 +8,7 @@ In this work, we use [DITTO](https://github.com/megagonlabs/ditto), the state-of
 
 The paper was accepted to [SIGMOD2023](https://2023.sigmod.org/).
 
-![Multiplex-new](Battleship_Framework.PNG)
+![Multiplex-new](Multiplex-new.PNG)
 
 ## MIER: Multiple Intents Entity Resolution
 We offer to extend the universal view of ER, pointedly reflected in the use of a single mapping from records to real-world entities, to include multiple intents.
