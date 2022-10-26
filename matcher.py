@@ -206,7 +206,7 @@ def predict(input_path, output_path, config, model,
     run_tag = '%s_lm=%s_dk=%s_su=%s' % (config['name'], lm, str(dk_injector != None), str(summarizer != None))
     os.system('echo %s %f >> log.txt' % (run_tag, run_time))
 
-def load_model(task, path, lm, use_gpu, inference=None, fp16=True):
+def load_model(task, path, seed, lm, use_gpu, inference=None, fp16=True, main_task=None):
     """Load a model for a specific task.
 
     Args:
@@ -223,9 +223,9 @@ def load_model(task, path, lm, use_gpu, inference=None, fp16=True):
     # load models
     model_name = task.split('/')[1]
     if inference is None:
-        full_path = task[:-1] + '/' + model_name
+        full_path = task[:-1] + '/' + str(seed) + '/' + model_name
     else:
-        full_path = task.split('_')[0] + '/' + model_name
+        full_path = task.split('/')[0] + '/' + main_task.split('/')[1] + '/' + str(seed) + '/' + model_name
     checkpoint = os.path.join(path, '%s.pt' % full_path)
     if not os.path.exists(checkpoint):
         raise ModelNotFoundError(checkpoint)
@@ -259,38 +259,77 @@ if __name__ == "__main__":
     parser.add_argument("--task", type=str, default='Structured/Beer')
     parser.add_argument("--input_path", type=str, default='input/candidates_small.jsonl')
     parser.add_argument("--output_path", type=str, default='output/matched_small.jsonl')
-    parser.add_argument("--lm", type=str, default='distilbert')
+    parser.add_argument("--lm", type=str, default='roberta')
     parser.add_argument("--use_gpu", dest="use_gpu", action="store_true")
     parser.add_argument("--fp16", dest="fp16", action="store_true")
     parser.add_argument("--checkpoint_path", type=str, default='checkpoints/')
     parser.add_argument("--dk", type=str, default=None)
     parser.add_argument("--summarize", dest="summarize", action="store_true")
-    parser.add_argument("--max_len", type=int, default=256)
+    parser.add_argument("--max_len", type=int, default=512)
     parser.add_argument("--intent", type=int, default=0)
     parser.add_argument("--intents_num", type=int, default=2)
     parser.add_argument("--inference", type=str, default=None)
     parser.add_argument("--MCML_inference", type=str, default="Multilabel")
+    parser.add_argument("--seeds_num", type=int, default=1)
     hp = parser.parse_args()
 
     main_task = hp.task
-    file_types = ['train', 'valid', 'test']
+    # file_types = ['train', 'valid', 'test']
+    file_types = ['test']
     inference = hp.inference
+    seeds_num = hp.seeds_num
     MCML_inference = hp.MCML_inference
+    for seed in range(seeds_num):
+        print("#########################Seed " + str(seed) + "#########################")
+        if inference is None:
+            file_types = ['train', 'valid', 'test']
+            for intent in range(hp.intents_num):
+                for file_type in file_types:
+                    print("********************" + file_type + str(intent) + "********************")
+                    # create the tag of the run
+                    task = main_task + str(intent)
+                    task_name = task.split('/')[1]
+                    input_path = ''.join((hp.input_path, '/', task_name[:-1],
+                                          '_', file_type, str(intent), '.txt'))
+                    output_path = ''.join((hp.output_path, '/', str(seed), '/', task_name[:-1],
+                                          '_', file_type, str(intent), '_output.txt'))
+                    if not os.path.exists(''.join((hp.output_path, '/', str(seed), '/'))):
+                        os.makedirs(''.join((hp.output_path, '/', str(seed), '/')))
+                    # load the models
+                    config, model = load_model(task, hp.checkpoint_path, seed,
+                                               hp.lm, hp.use_gpu, inference, hp.fp16)
+                    summarizer = dk_injector = None
+                    if hp.summarize:
+                        summarizer = Summarizer(config, hp.lm)
 
-    if inference is None:
-        for intent in range(hp.intents_num):
+                    if hp.dk is not None:
+                        if 'product' in hp.dk:
+                            dk_injector = ProductDKInjector(config, hp.dk)
+                        else:
+                            dk_injector = GeneralDKInjector(config, hp.dk)
+
+                    # run prediction
+                    predict(input_path, output_path, config, model,
+                            summarizer=summarizer,
+                            max_len=hp.max_len,
+                            lm=hp.lm,
+                            dk_injector=dk_injector,
+                            inference=inference)
+        elif inference == 'Multilabel':
+            file_types = ['test']
             for file_type in file_types:
-                print("********************" + file_type + str(intent) + "********************")
-                # create the tag of the run
-                task = main_task + str(intent)
+                task = main_task + '_Multilabel'
+                # task = main_task
                 task_name = task.split('/')[1]
-                input_path = hp.input_path + '/' + task_name[:-1] + '_' + file_type + str(intent) + '.txt'
-                output_path = hp.input_path + '/' + task_name[:-1] + '_' + file_type + str(intent) + '_output.txt'
+
+                input_path = hp.input_path + '/' + task_name.split('_')[0] + '_' + file_type + '_Multilabel.txt'
+                output_path = hp.output_path + '/' + str(seed) + '/' + task_name.split('_')[0] + '_' + \
+                              file_type + '_Multilabel_output.txt'
+                if not os.path.exists(''.join((hp.output_path, '/', str(seed), '/'))):
+                    os.makedirs(''.join((hp.output_path, '/', str(seed), '/')))
                 # load the models
-                config, model = load_model(task, hp.checkpoint_path,
-                                           hp.lm, hp.use_gpu, inference, hp.fp16)
-
-
+                config, model = load_model(task, hp.checkpoint_path, seed,
+                                           hp.lm, hp.use_gpu, inference, hp.fp16, main_task)
                 summarizer = dk_injector = None
                 if hp.summarize:
                     summarizer = Summarizer(config, hp.lm)
@@ -301,66 +340,40 @@ if __name__ == "__main__":
                     else:
                         dk_injector = GeneralDKInjector(config, hp.dk)
 
-                # run prediction
                 predict(input_path, output_path, config, model,
                         summarizer=summarizer,
                         max_len=hp.max_len,
                         lm=hp.lm,
                         dk_injector=dk_injector,
                         inference=inference)
-    elif inference == 'Multilabel':
-        for file_type in file_types:
-            task = main_task + '_Multilabel'
-            # task = main_task
-            task_name = task.split('/')[1]
-            input_path = hp.input_path + '/' + task_name.split('_')[0] + '_' + file_type + '_Multilabel.txt'
-            output_path = hp.input_path + '/' + task_name.split('_')[0] + '_' + file_type + '_Multilabel_output.txt'
-            # load the models
-            config, model = load_model(task, hp.checkpoint_path,
-                                       hp.lm, hp.use_gpu, inference, hp.fp16)
-            summarizer = dk_injector = None
-            if hp.summarize:
-                summarizer = Summarizer(config, hp.lm)
 
-            if hp.dk is not None:
-                if 'product' in hp.dk:
-                    dk_injector = ProductDKInjector(config, hp.dk)
-                else:
-                    dk_injector = GeneralDKInjector(config, hp.dk)
+        elif inference == 'MCML':
+            file_types = ['train', 'valid', 'test']
+            for file_type in file_types:
+                task = main_task + '_MCML'
+                # task = main_task
+                task_name = task.split('/')[1]
+                input_path = hp.input_path + '/' + task_name.split('_')[0] + '_' + file_type + '_MCML.txt'
+                output_path = hp.input_path + '/' + str(seed) + '/' + task_name.split('_')[0] + '_'\
+                              + file_type + '_' + MCML_inference + '_MCML_output.txt'
+                # load the models
+                config, model = load_model(task, hp.checkpoint_path, seed,
+                                           hp.lm, hp.use_gpu, inference, hp.fp16)
+                summarizer = dk_injector = None
+                if hp.summarize:
+                    summarizer = Summarizer(config, hp.lm)
 
-            predict(input_path, output_path, config, model,
-                    summarizer=summarizer,
-                    max_len=hp.max_len,
-                    lm=hp.lm,
-                    dk_injector=dk_injector,
-                    inference=inference)
+                if hp.dk is not None:
+                    if 'product' in hp.dk:
+                        dk_injector = ProductDKInjector(config, hp.dk)
+                    else:
+                        dk_injector = GeneralDKInjector(config, hp.dk)
 
-    elif inference == 'MCML':
-        for file_type in file_types:
-            task = main_task + '_MCML'
-            # task = main_task
-            task_name = task.split('/')[1]
-            input_path = hp.input_path + '/' + task_name.split('_')[0] + '_' + file_type + '_MCML.txt'
-            output_path = hp.input_path + '/' + task_name.split('_')[0] + '_'\
-                          + file_type + '_' + MCML_inference + '_MCML_output.txt'
-            # load the models
-            config, model = load_model(task, hp.checkpoint_path,
-                                       hp.lm, hp.use_gpu, inference, hp.fp16)
-            summarizer = dk_injector = None
-            if hp.summarize:
-                summarizer = Summarizer(config, hp.lm)
-
-            if hp.dk is not None:
-                if 'product' in hp.dk:
-                    dk_injector = ProductDKInjector(config, hp.dk)
-                else:
-                    dk_injector = GeneralDKInjector(config, hp.dk)
-
-            predict(input_path, output_path, config, model,
-                    summarizer=summarizer,
-                    max_len=hp.max_len,
-                    lm=hp.lm,
-                    dk_injector=dk_injector,
-                    inference=inference,
-                    MCML_inference=MCML_inference)
+                predict(input_path, output_path, config, model,
+                        summarizer=summarizer,
+                        max_len=hp.max_len,
+                        lm=hp.lm,
+                        dk_injector=dk_injector,
+                        inference=inference,
+                        MCML_inference=MCML_inference)
 

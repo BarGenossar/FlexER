@@ -344,6 +344,14 @@
   "testset": "data/WDC/WDC_small/WDC_small_test1.txt"
   },
   {
+  "name": "WDC/WDC_small2",
+  "task_type": "classification",
+  "vocab": ["0", "1"],
+  "trainset": "data/WDC/WDC_small/WDC_small_train2.txt",
+  "validset": "data/WDC/WDC_small/WDC_small_valid2.txt",
+  "testset": "data/WDC/WDC_small/WDC_small_test2.txt"
+  },
+  {
   "name": "Textual/Abt-Buy",
   "task_type": "classification",
   "vocab": ["0", "1"],
@@ -420,7 +428,7 @@
     {
   "name": "WDC/WDC_enriched_small_Multilabel",
   "task_type": "classification",
-  "vocab": ["0", "1"],
+  "vocab": ["0", "1", "2"],
   "trainset": "data/WDC/WDC_small/WDC_small_train_Multilabel.txt",
   "validset": "data/WDC/WDC_small/WDC_small_valid_Multilabel.txt",
   "testset": "data/WDC/WDC_small/WDC_small_test_Multilabel.txt"
@@ -432,6 +440,14 @@
   "trainset": "data/WDC/WDC_small/WDC_small_train_MCML.txt",
   "validset": "data/WDC/WDC_small/WDC_small_valid_MCML.txt",
   "testset": "data/WDC/WDC_small/WDC_small_test_MCML.txt"
+  },
+  {
+  "name": "WDC/WDC_small_Multilabel",
+  "task_type": "classification",
+  "vocab": ["0", "1", "2"],
+  "trainset": "data/WDC/WDC_small/WDC_small_train_Multilabel.txt",
+  "validset": "data/WDC/WDC_small/WDC_small_valid_Multilabel.txt",
+  "testset": "data/WDC/WDC_small/WDC_small_test_Multilabel.txt"
   },
   {
   "name": "WDC/WDC_enriched_small0",

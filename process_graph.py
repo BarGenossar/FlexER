@@ -10,8 +10,7 @@ torch_geometric.set_debug(True)
 
 
 class GraphReaderFlexER:
-    def __init__(self, file_type, task, files_path, intent, intents_num, emb_type,
-                 correlations=None, graph_type='complete', inference=None, MCML_inference=None):
+    def __init__(self, file_type, task, files_path, intent, intents_num):
         self.file_type = file_type
         self.task = task
         self.graph_type = graph_type

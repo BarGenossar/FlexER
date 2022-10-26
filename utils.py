@@ -1,3 +1,11 @@
+import pickle
+
+
+def get_datasets(config):
+    trainset = config['trainset']
+    validset = config['validset']
+    testset = config['testset']
+    return trainset, validset, testset
 
 
 def create_multi_dict(path, intents_num):
@@ -26,3 +34,17 @@ def generate_txt_files(path, multi_label_dict):
             new_file.write(new_line)
         new_file.close()
     return
+
+
+def save_to_pkl(file, rel_path):
+    output = open(rel_path, 'wb')
+    pickle.dump(file, output)
+    output.close()
+    return
+
+
+def load_pkl(rel_path):
+    pkl_file_path = open(rel_path, 'rb')
+    pkl_file = pickle.load(pkl_file_path)
+    pkl_file_path.close()
+    return pkl_file
