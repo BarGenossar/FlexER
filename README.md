@@ -49,7 +49,7 @@ python train_ditto.py  --task Amazon/Amazon-Website  \
 ```
 The meaning of the flags, excluding intents_num, are described in [DITTO](https://github.com/megagonlabs/ditto).
 
-### Yielding prediction vectors
+### Creating Prediction Vectors
 After training the models for each intent, the creation of pair representations (in our case,  the final embedding of the special token [cls]), can be executed using the following command:
 ```
 python matcher.py  --task Amazon/Amazon-Website  \
