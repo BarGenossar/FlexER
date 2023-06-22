@@ -19,7 +19,7 @@ A one-size-fits-all resolution provides an adequate solution for universal ER, a
 Yet, some data cleaning/integration challenges may involve multiple intents. Therefore, instead of performing a universal ER, we argue for enhancing ER to support multiple outcomes for multiple intents. 
 A MIER involves a set of (possibly related) entity mappings for a set of intents E = {𝐸1, 𝐸2, · · · , 𝐸𝑃 }, offering multiple ways to divide 𝐷, each serving as a solution for a respective intent.
 
-For further details and official definitions, please refer to our paper (currently under review).
+For further details and official definitions, please refer to our [paper](https://dl.acm.org/doi/10.1145/3588722).
 
 ## Requirements
 1. The same as [DITTO](https://github.com/megagonlabs/ditto)
@@ -38,7 +38,7 @@ We provide instructions for the sake of reproducibility.
 The used datasets are provided in the [data](./data/) folder, divided to train, validation and test (for each intent).
 Explanations about candidate pair representation is provided in [DITTO](https://github.com/megagonlabs/ditto).
 
-Details about the datasets and intents creation are given in our paper (currently under review).
+Details about the datasets and intents creation are given in our [paper](https://dl.acm.org/doi/10.1145/3588722).
 
 ### training with Ditto
 To train the independent intent matchers with Ditto (you can apply your own matcher instead), run the following command:
