@@ -33,7 +33,7 @@ We provide instructions for the sake of reproducibility.
 | ------------- | ------------- | ------------- | ------------- |
 | AmazonMI  | 3,835  | 15,404  |  5  |
 | Walmart-Amazon  | 24,628  | 10,242  |  4  |
-| WDC  | 10,935  | 30,673  |  2  |
+| WDC  | 10,935  | 30,673  |  3  |
 
 The used datasets are provided in the [data](./data/) folder, divided to train, validation and test (for each intent).
 Explanations about candidate pair representation is provided in [DITTO](https://github.com/megagonlabs/ditto).
