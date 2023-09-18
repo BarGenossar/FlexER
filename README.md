@@ -77,3 +77,18 @@ python flexer_main.py  --task Amazon/Amazon-Website  \
 Use the flag ''generate_neighbors_dict'' only for the first time you want to create the graph (with the KNN computations). 
 If the graph was already created use the ''load_dataset'' flag.
 If you want to run an intent ablation study use the ''ablation'' flag.
+
+### Cite FlexER
+if you use this code as part of your research, don't forget to cite us:
+```
+@article{genossar2023flexer,
+  title={FlexER: Flexible Entity Resolution for Multiple Intents},
+  author={Genossar, Bar and Shraga, Roee and Gal, Avigdor},
+  journal={Proceedings of the ACM on Management of Data},
+  volume={1},
+  number={1},
+  pages={1--27},
+  year={2023},
+  publisher={ACM New York, NY, USA}
+}
+```
