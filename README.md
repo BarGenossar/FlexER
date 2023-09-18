@@ -6,7 +6,7 @@ FlexER combines independent intent-based solutions to improve outcome to multipl
 The independent intent solutions are based on solutions to universal ER tasks, such that every matcher which can provide a latent representation of record pairs can be adjusted to our framework.
 In this work, we use [DITTO](https://github.com/megagonlabs/ditto), the state-of-the-art in universal ER. Specifically, we use the final embedding of the special token [cls](used for classification) as a record pair representation, and inject it into the FlexER system.
 
-The paper was accepted to [SIGMOD2023](https://2023.sigmod.org/).
+The paper was presented in [SIGMOD2023](https://2023.sigmod.org/).
 
 ![Multiplex-new](Multiplex-new.PNG)
 
@@ -79,7 +79,7 @@ If the graph was already created use the ''load_dataset'' flag.
 If you want to run an intent ablation study use the ''ablation'' flag.
 
 ### Cite FlexER
-if you use this code as part of your research, don't forget to cite us:
+if you use this code as part of your research, don't forget to cite our paper:
 ```
 @article{genossar2023flexer,
   title={FlexER: Flexible Entity Resolution for Multiple Intents},
