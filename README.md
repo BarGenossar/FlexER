@@ -40,7 +40,7 @@ Explanations about candidate pair representation is provided in [DITTO](https://
 
 Details about the datasets and intents creation are given in our [paper](https://dl.acm.org/doi/10.1145/3588722).
 
-### training with Ditto
+### Training with Ditto
 To train the independent intent matchers with Ditto (you can apply your own matcher instead), run the following command:
 ```
 python train_ditto.py  --task Amazon/Amazon-Website  \
@@ -78,8 +78,8 @@ Use the flag ''generate_neighbors_dict'' only for the first time you want to cre
 If the graph was already created use the ''load_dataset'' flag.
 If you want to run an intent ablation study use the ''ablation'' flag.
 
-### Cite FlexER
-if you use this code as part of your research, don't forget to cite our paper:
+### Citing FlexER
+if you use this code helpful in your research, don't forget to cite our paper:
 ```
 @article{genossar2023flexer,
   title={FlexER: Flexible Entity Resolution for Multiple Intents},
