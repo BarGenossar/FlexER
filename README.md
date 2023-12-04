@@ -79,7 +79,7 @@ If the graph was already created use the ''load_dataset'' flag.
 If you want to run an intent ablation study use the ''ablation'' flag.
 
 ### Citing FlexER
-if you use this code helpful in your research, don't forget to cite our paper:
+if you find this code helpful in your research, don't forget to cite our paper:
 ```
 @article{genossar2023flexer,
   title={FlexER: Flexible Entity Resolution for Multiple Intents},
